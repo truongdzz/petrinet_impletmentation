@@ -2,7 +2,7 @@
 
 
 ##Mô tả:
-Ứng dụng mô phỏng hoạt động của petri net. Sử dụng thư viện Jquery và Rapael.
+Ứng dụng mô phỏng hoạt động của petri net. Sử dụng thư viện Jquery và Raphael.
 
 ###Cài đặt:
 Tải tất cả các file trên về cùng một folder.
