@@ -1,6 +1,6 @@
 var RunList = [];
 var RunIcon = null;
-var ExitRun = false;    // ������ ������ "����", �.�.(����� �� ���������)
+var ExitRun = false; // ������ ������ "����", �.�.(����� �� ���������)
 var IsRunning = false;
 var AnimateDelay = 500;
 
@@ -10,6 +10,7 @@ function StartRun() {
     RunIcon = new RunIconInitialize(AnimateDelay);
     Run();
 }
+
 function StopRun() {
     ExitRun = true;
     IsRunning = false;
@@ -20,13 +21,12 @@ function StopRun() {
 //    RunList = [];
 //}
 
-function Run()
-{
+function Run() {
     RunList = [];
-    Object.keys(Places).forEach(function (key, ind) { Places[key].tokens_count = Places[key].tokens.length; });
+    Object.keys(Places).forEach(function(key, ind) { Places[key].tokens_count = Places[key].tokens.length; });
 
     if (!ExitRun) {
-        Object.keys(Trans).forEach(function (key, ind) {        // ���� �� ������ ���������
+        Object.keys(Trans).forEach(function(key, ind) { // ���� �� ������ ���������
             var arcsIn = get_arcsIn(key);
             if (ready_toFire(arcsIn)) {
                 var run_item = {};
@@ -38,44 +38,39 @@ function Run()
             }
         });
         animate_list();
-    }
-    else
-    {
+    } else {
         RunIcon.remove();
     }
 }
 
-function animate_list()
-{
+function animate_list() {
     animate1();
-    RunIcon.animate1();     //Delay(1) using animation
+    RunIcon.animate1(); //Delay(1) using animation
 }
-function animate1()
-{
-    RunList.forEach(function (run_item, ind) {
-        run_item.arcsIn.forEach(function (arc, ind) {			                            
-            if (arc.from.tokens.length > 0)
-            {
+
+function animate1() {
+    RunList.forEach(function(run_item, ind) {
+        run_item.arcsIn.forEach(function(arc, ind) {
+            if (arc.from.tokens.length > 0) {
                 var animation = Raphael.animation(new XY(arcX2(arc), arcY2(arc)), AnimateDelay, "easeIn");
-                var ttoken = arc.from.tokens.pop();                                           // ����� �����
-                if (typeof ttoken != "undefined" && ttoken.hasOwnProperty('type'))            // ���� ��������� �� ������ > 10
-                {
-                    ttoken.remove();                                                          // ����� �������
+                var ttoken = arc.from.tokens.pop();
+                if (typeof ttoken != "undefined" && ttoken.hasOwnProperty('type')) {
+                    ttoken.remove();
                 }
-                ttoken = paper.circle(arcX1(arc), arcY1(arc), TN_RADIUS).attr(token_attr);            // �������� ����� ��� ��������
+                ttoken = paper.circle(arcX1(arc), arcY1(arc), TN_RADIUS).attr(token_attr);
                 redraw_tokens(arc.from, arc.from.x, arc.from.y);
-                run_item.temp_tokens.push(ttoken);                                            //  � ����������� �� ��������� ������
-                run_item.temp_tokens[run_item.temp_tokens.length - 1].animate(animation);     // ������ ���������
+                run_item.temp_tokens.push(ttoken);
+                run_item.temp_tokens[run_item.temp_tokens.length - 1].animate(animation);
             }
         });
     });
 }
-function animate2()
-{
-    RunList.forEach(function (run_item, ind) {
-        run_item.temp_tokens.forEach(function (token, ind) { token.remove(); });
+
+function animate2() {
+    RunList.forEach(function(run_item, ind) {
+        run_item.temp_tokens.forEach(function(token, ind) { token.remove(); });
         run_item.temp_tokens = [];
-        run_item.arcsOut.forEach(function (arc, ind) {			
+        run_item.arcsOut.forEach(function(arc, ind) {
             //var token = paper.circle(run_item.tran.x, run_item.tran.y, 3).attr(token_attr);
             //var animation = Raphael.animation(new XY(arc.to.x, arc.to.y + 10), AnimateDelay, "easeIn");
             var token = paper.circle(arcX1(arc), arcY1(arc), TN_RADIUS).attr(token_attr);
@@ -84,13 +79,14 @@ function animate2()
             token.animate(animation);
         });
     });
-    RunIcon.animate2();     //Delay(2) using animation
+    RunIcon.animate2(); //Delay(2) using animation
 }
+
 function animate3() {
-    RunList.forEach(function (run_item, ind) {
-        run_item.temp_tokens.forEach(function (token, ind) { token.remove(); });
+    RunList.forEach(function(run_item, ind) {
+        run_item.temp_tokens.forEach(function(token, ind) { token.remove(); });
         run_item.temp_tokens = [];
-        run_item.arcsOut.forEach(function (arc, ind) {			// 
+        run_item.arcsOut.forEach(function(arc, ind) { // 
             AddToken(arc.to);
         });
     });
@@ -100,52 +96,51 @@ function animate3() {
 //Updated: 3.02.2017
 function ready_toFire(arcsIn) {
     var isReady = true;
-    arcsIn.forEach(function (item, ind) {
+    arcsIn.forEach(function(item, ind) {
         if (item.from.tokens_count <= 0) {
             isReady = false;
-        }
-        else {
+        } else {
             item.from.tokens_count--;
         }
     });
     if (!isReady) { //���� ��������, �� ������������ ������
-        arcsIn.forEach(function (item, ind) { item.from.tokens_count = item.from.tokens.length; });
+        arcsIn.forEach(function(item, ind) { item.from.tokens_count = item.from.tokens.length; });
     }
     return isReady;
 }
 
-function get_arcsIn(key)
-{
+function get_arcsIn(key) {
     var arcsIn = [];
-    Arcs.forEach(function (item, index) {
+    Arcs.forEach(function(item, index) {
         if (item.to.key == key) {
             arcsIn.push(item);
         }
     });
     return arcsIn;
 }
+
 function get_arcsOut(key) {
     var arcsOut = [];
-    Arcs.forEach(function (item, index) {
+    Arcs.forEach(function(item, index) {
         if (item.from.key == key) {
             arcsOut.push(item);
         }
     });
     return arcsOut;
 }
-function RunIconInitialize(delay)
-{
+
+function RunIconInitialize(delay) {
     var x = 25;
     var y = PAPER_HEIGHT - 10;
     var width = 40;
     var height = 2;
     var r = 4;
 
-    this.img = paper.circle(x, y, r).attr({"fill":"red", "stroke":"red"});
+    this.img = paper.circle(x, y, r).attr({ "fill": "red", "stroke": "red" });
     this.animation1 = Raphael.animation(new XY(x + width, y), delay, "easyin", animate2);
     this.animation2 = Raphael.animation(new XY(x, y), delay, "easyin", animate3);
-    this.animate1 = function () { this.img.animate(this.animation1); };
-    this.animate2 = function () { this.img.animate(this.animation2); };
+    this.animate1 = function() { this.img.animate(this.animation1); };
+    this.animate2 = function() { this.img.animate(this.animation2); };
 
     //this.img1 = paper.rect(x - height / 2, y - height / 2, 1, height).attr("stroke", "gray");
     //this.img2 = paper.rect(x + width, y - height / 2, 1, height).attr("fill", "gray");
@@ -153,7 +148,7 @@ function RunIconInitialize(delay)
 
     //this.text = paper.text(x, y-10, "Running...").attr({ "fill": "blue", "font-size": "12", "font-family": "Courier New", "text-anchor" : "start" });
 
-    this.remove = function () {
+    this.remove = function() {
         this.img.remove();
         //this.img1.remove();
         //this.img2.remove();
@@ -165,12 +160,15 @@ function RunIconInitialize(delay)
 function arcX1(arc) {
     return arc.img.attrs.path[0][1];
 }
+
 function arcY1(arc) {
     return arc.img.attrs.path[0][2];
 }
+
 function arcX2(arc) {
     return arc.img.attrs.path[1][1];
 }
+
 function arcY2(arc) {
     return arc.img.attrs.path[1][2];
 }
