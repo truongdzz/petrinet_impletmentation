@@ -41,11 +41,21 @@ function ResetPnet() {
 }
 
 function NewPlace(x, y) {
-    AddPlace("P" + next_key(Places), x, y, 0);
+    var pname = prompt("Nhập tên Place:", '');
+    if (pname != "") {
+        AddPlace("P_" + pname, x, y, 0);
+    } else {
+        AddPlace("P" + next_key(Places), x, y, 0);
+    }
 }
 
 function NewTransition(x, y) {
-    AddTransition("T" + next_key(Trans), x, y);
+    var tname = prompt("Nhập tên Transition:", '');
+    if (tname != null) {
+        AddTransition("T_" + tname, x, y);
+    } else {
+        AddTransition("T" + next_key(Trans), x, y);
+    }
 }
 
 function next_key(nodes) {
