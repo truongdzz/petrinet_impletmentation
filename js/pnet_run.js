@@ -3,6 +3,8 @@ var RunIcon = null;
 var ExitRun = false; // ������ ������ "����", �.�.(����� �� ���������)
 var IsRunning = false;
 var AnimateDelay = 500;
+var global_ready = true;
+var arrow_marked = false;
 
 function StartRun() {
     IsRunning = true;
@@ -26,7 +28,7 @@ function Run() {
     Object.keys(Places).forEach(function(key, ind) { Places[key].tokens_count = Places[key].tokens.length; });
 
     if (!ExitRun) {
-        Object.keys(Trans).forEach(function(key, ind) { // ���� �� ������ ���������
+        Object.keys(Trans).forEach(function(key, ind) {
             var arcsIn = get_arcsIn(key);
             if (ready_toFire(arcsIn)) {
                 var run_item = {};
@@ -37,10 +39,15 @@ function Run() {
                 RunList.push(run_item);
             }
         });
+
         animate_list();
     } else {
         RunIcon.remove();
     }
+}
+
+function change_route() {
+    global_ready = !global_ready;
 }
 
 function animate_list() {
@@ -93,17 +100,20 @@ function animate3() {
     Run();
 }
 
-//Updated: 3.02.2017
+
 function ready_toFire(arcsIn) {
     var isReady = true;
     arcsIn.forEach(function(item, ind) {
         if (item.from.tokens_count <= 0) {
             isReady = false;
+        } else if (item.mark == true) {
+            isReady = global_ready;
+            if (global_ready) item.from.tokens_count--;
         } else {
             item.from.tokens_count--;
         }
     });
-    if (!isReady) { //���� ��������, �� ������������ ������
+    if (!isReady) {
         arcsIn.forEach(function(item, ind) { item.from.tokens_count = item.from.tokens.length; });
     }
     return isReady;

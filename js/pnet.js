@@ -271,6 +271,13 @@ function AddArc(node1, node2) {
         arc.to = node2;
         arc.img.click(arc_click);
         arc.img.keys = [node1.key, node2.key];
+        if (!arrow_marked) {
+            var mark = confirm("Đánh dấu liên kết này? (trong trường hợp cần vô hiệu hóa, chỉ được đánh dấu 1 liên kết)");
+            arc.mark = mark;
+            arrow_marked = mark;
+        } else {
+            arc.mark = false;
+        }
         arc.pnString = function() { return this.from.key + "," + this.to.key; }
         Arcs.push(arc);
     }

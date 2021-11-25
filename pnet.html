@@ -62,10 +62,10 @@
                     <button class=" button-29" id="btnAddTrans">
                         <span class="glyphicon glyphicon-plus"></span> Transition
                     </button>
-                    <button class=" button-29" id="btnRemoveObj">
+                    <button style="width:80px" class=" button-29" id="btnRemoveObj">
                         <span class="glyphicon glyphicon-remove"></span> Remove
                     </button>
-                    <button class=" button-29" id="btnClearPaper">
+                    <button style="width:70px" class=" button-29" id="btnClearPaper">
                         <span class="glyphicon glyphicon-remove-circle"></span> Clear
                     </button>
                 </div>
@@ -79,20 +79,9 @@
                     </button>
                 </div>
                 &nbsp;
-                <div class="btn-group">
-                    <button class="button-33 " id="btnSaveLocal">
-                        <span class="glyphicon glyphicon-import"></span> Save
-                    </button>
-                    <button class="button-33" id="btnRestoreLocal">
-                        <span class="glyphicon glyphicon-export"></span> Restore
-                    </button>
-                    <input id="fileinput" type="file" style="display:none;" onchange="restore_fromFile()" />
-                    <button class="button-33 " id="btnFalseInput">
-                        <span class="glyphicon glyphicon-open"></span> Open
-                    </button>
-                    <input id="fileinput" type="file" style="display:none;" />
-                    <button class="button-33 " id="btnDownload">
-                        <span class="glyphicon glyphicon-download"></span> Download
+                <div class="btn-group" hidden>
+                    <button class="button-33" onclick="change_route()">
+                        <span class="glyphicon glyphicon-refresh"></span> Vô hiệu hóa/khởi động lại liên kết đã đánh dấu
                     </button>
                 </div>
                 &nbsp;
@@ -159,6 +148,7 @@
         }, "Remove selected object");
         ini_button("btnClearPaper", function() {
             clear_paper();
+            global_ready = true;
         }, "Clear canvas");
         ini_button("btnRun", function() {
             run_clicked();
@@ -166,18 +156,7 @@
         ini_button("btnStop", function() {
             stop_clicked();
         }, "Stop running");
-        ini_button("btnSaveLocal", function() {
-            save_local();
-        }, "Save to local memory");
-        ini_button("btnRestoreLocal", function() {
-            restore_local();
-        }, "Restore from local memory");
-        ini_button("btnFalseInput", function() {
-            open_clicked();
-        }, "Open from file");
-        ini_button("btnDownload", function() {
-            save_toFile();
-        }, "Download as file");
+
         ini_button("btnTokenAdd", function() {
             token_add();
         }, "Add token to selected place");
@@ -256,6 +235,7 @@
         ResetPnet();
         paper.clear();
         paper_initialize();
+        arrow_marked = false;
     }
 
     function body_onresize() {
